@@ -54,17 +54,17 @@ anchor build
 anchor keys list
 ```
 
-5. Update your [`Anchor.toml`] file, by using the address generated in the previous step:
+5. Update your `Anchor.toml` file, by using the address generated in the previous step:
 
 ```
 [programs.devnet]
 nft_lend_borrow = "<ADD YOUR ADDRESS HERE>"
 ```
 
-6. Update your ['lib.rs'] file by adding the the address generated in step 4 to the declare_id!() macro
+6. Update your `lib.rs` file by adding the the address generated in step 4 to the `declare_id!()` macro
 
 ```
-    // snip
+    // code
 
 pub use errors::ErrorCodes;
 pub use instructions::*;
