@@ -27,4 +27,11 @@ pub mod nft_lendswap {
     pub fn offer_loan(ctx: Context<OfferLoan>, offer_amount: u64) -> Result<()> {
         instructions::offer_loan::handler(ctx, offer_amount)
     }
+
+    pub fn withdraw_offer(
+        ctx: Context<WithdrawOffer>,
+        minimum_balance_for_rent_exemption: u64,
+    ) -> Result<()> {
+        instructions::withdraw_offer::handler(ctx, minimum_balance_for_rent_exemption)
+    }
 }
