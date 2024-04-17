@@ -1,8 +1,10 @@
 use anchor_lang::prelude::*;
 
+pub mod errors;
 pub mod instructions;
 pub mod states;
 
+pub use errors::ErrorCodes;
 pub use instructions::*;
 pub use states::*;
 
