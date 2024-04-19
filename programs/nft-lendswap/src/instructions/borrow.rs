@@ -71,3 +71,31 @@ impl<'info> Borrow<'info> {
         CpiContext::new(self.token_program.to_account_info(), cpi_accounts)
     }
 }
+
+pub fn handler(ctx: Context<Borrow>, minimum_balance_for_rent_exemption: u64) -> Result<()> {
+    let active_loan = &mut ctx.accounts.active_loan;
+    let offer = &mut ctx.accounts.offer_loan;
+    let collection = &mut ctx.accounts.collection_pool;
+
+    if offer.is_loan_taken == true {
+        return Err(ErrorCodes::LoanAlreadyTaken.into());
+    }
+
+    active_loan.collection = collection.key();
+    active_loan.offer_account = offer.key();
+    active_loan.lender = offer.lender.key();
+    active_loan.borrower = ctx.accounts.borrower.key();
+    active_loan.mint = ctx.accounts.asset_mint.key();
+    active_loan.loan_ts = ctx.accounts.clock.unix_timestamp;
+    active_loan.repay_ts = ctx.accounts.clock.unix_timestamp + collection.duration;
+    active_loan.is_repaid = false;
+    active_loan.is_liquidated = false;
+    active_loan.bump = *ctx.bumps.get("active_loan").unwrap();
+
+    offer.borrower = ctx.accounts.borrower.key();
+    offer.is_loan_taken = true;
+
+    token::transfer(ctx.accounts.transfer_to_vault_context(), 1)?;
+
+    let vault_lamports_intial: u64 = ctx.accounts.vault_account.to_account_info().lamports();
+}
