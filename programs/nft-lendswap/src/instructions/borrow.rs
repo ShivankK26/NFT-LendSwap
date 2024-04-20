@@ -98,4 +98,17 @@ pub fn handler(ctx: Context<Borrow>, minimum_balance_for_rent_exemption: u64) ->
     token::transfer(ctx.accounts.transfer_to_vault_context(), 1)?;
 
     let vault_lamports_intial: u64 = ctx.accounts.vault_account.to_account_info().lamports();
+
+    let transfer_amount = vault_lamports_intial
+        .checked_sub(minimum_balance_for_rent_exemption)
+        .unwrap();
+
+    **ctx
+        .accounts
+        .vault_account
+        .to_account_info()
+        .try_borrow_mut_lamports()? -= transfer_amount;
+    **ctx.accounts.borrower.try_borrow_mut_lamports()? += transfer_amount;
+
+    Ok(())
 }
