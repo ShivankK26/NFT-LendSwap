@@ -59,7 +59,7 @@ pub fn handler(ctx: Context<Liquidate>) -> Result<()> {
     let (_vault_authority, vault_auth_bump) =
         Pubkey::find_program_address(&[collection.key().as_ref()], ctx.program_id);
 
-    let cool_seeds = collection.key();
+    let col_seeds = collection.key();
 
     let authority_seeds = &[col_seeds.as_ref(), &[vault_auth_bump]];
 
